@@ -18,12 +18,12 @@ if [ $pass != $conPass ]; then
 fi
 
 # Updates system
-#apt-get update -y
-#apt-get upgrade -y
+apt-get update -y
+apt-get upgrade -y
 
 # Install expect, Apache & MySQL server
 apt-get install expect -y
-#apt-get install apache2 -y
+apt-get install apache2 -y
 
 # Setup auto response during installation
 debconf-set-selections <<< "mysql-server mysql-server/root_password password $pass"
