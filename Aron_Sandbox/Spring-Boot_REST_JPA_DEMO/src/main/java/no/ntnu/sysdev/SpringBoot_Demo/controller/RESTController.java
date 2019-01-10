@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:80")
+@CrossOrigin(origins = "http://localhost")
 public class RESTController {
 
     private final UserService userService;

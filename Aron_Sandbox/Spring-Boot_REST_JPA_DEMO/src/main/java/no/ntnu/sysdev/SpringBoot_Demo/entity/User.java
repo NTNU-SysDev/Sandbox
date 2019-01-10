@@ -8,16 +8,12 @@ import javax.validation.constraints.NotNull;
 @Table(name = "user")
 public class User {
 
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-
     @NotNull
     @NotEmpty
     @Column(name = "name")
     private String name;
 
+    @Id
     @NotNull
     @NotEmpty
     @Column(name = "email", unique = true)
@@ -29,7 +25,6 @@ public class User {
     private String phone;
 
     @NotNull
-    @NotEmpty
     @Column(name = "age")
     private int age;
 
@@ -37,23 +32,11 @@ public class User {
 
     }
 
-    public User(int id, String name, String email, String phone, int age) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.age = age;
-    }
-
     public User(String name, String email, String phone, int age) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.age = age;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getName() {
