@@ -1,15 +1,21 @@
 getAllUsers();
 
+/**
+ * Does a GET request to the given url and
+ * processes the response
+ */
 function getAllUsers() {
     fetch("http://localhost:8081/users").then(function (response) {
         return response.json();
     }).then(function (json) {
-        console.log(json);
         showUsers(json);
     });
 }
 
-
+/**
+ * Sends a POST Request to the specified url
+ * containing details needed for creating a new user
+ */
 function createUser() {
     var name = document.getElementById('name_field').value;
     var email = document.getElementById('email_field').value;
@@ -38,6 +44,13 @@ function createUser() {
     })
 }
 
+/**
+ * Sends a POST Request to the given url with
+ * the email of the specific user that is to
+ * be deleted
+ *
+ * @param email email of the user to delete
+ */
 function deleteUser(email) {
     console.log("Email: " + email);
     fetch('http://localhost:8081/deleteUser', {
@@ -57,6 +70,12 @@ function deleteUser(email) {
     });
 }
 
+/**
+ * Iterates over all the objects given in
+ * the JSON Object and adds them to the table_body.
+ *
+ * @param json json object containing the response from the server
+ */
 function showUsers(json) {
     var table_body = '';
     json.forEach(function (object) {
@@ -65,6 +84,12 @@ function showUsers(json) {
     document.getElementById('table_body').innerHTML = table_body;
 }
 
+/**
+ * Returns an html table row containing user details
+ *
+ * @param user the user you wish to make a row of
+ * @returns an html table row containing user details
+ */
 function formatUserRow(user) {
     return (
         "<tr>\n" +

@@ -4,9 +4,20 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+/**
+ * This User class is annotated with @Entity,
+ * indicating that it is a JPA entity.
+ * Could think of it representing a user table
+ * in a database.
+ */
 @Entity
 @Table(name = "user")
 public class User {
+
+    /**
+     * The fields below represent our attributes
+     * in the user table
+     */
 
     @NotNull
     @NotEmpty
