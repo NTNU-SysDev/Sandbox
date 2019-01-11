@@ -5,7 +5,7 @@ getAllUsers();
  * processes the response
  */
 function getAllUsers() {
-    fetch("http://localhost:8081/users").then(function (response) {
+    fetch("http://localhost:8080/users").then(function (response) {
         return response.json();
     }).then(function (json) {
         showUsers(json);
@@ -19,11 +19,10 @@ function getAllUsers() {
 function createUser() {
     var name = document.getElementById('name_field').value;
     var email = document.getElementById('email_field').value;
-    var password = document.getElementById('password_field').value;
     var phone = document.getElementById('phone_field').value;
     var age = document.getElementById('age_field').value;
 
-    fetch('http://localhost:8081/createUser', {
+    fetch('http://localhost:8080/createUser', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -31,7 +30,6 @@ function createUser() {
         body: JSON.stringify({
             "name": name,
             "email": email,
-            "password": password,
             "phone": phone,
             "age": age
         })
@@ -53,7 +51,7 @@ function createUser() {
  */
 function deleteUser(email) {
     console.log("Email: " + email);
-    fetch('http://localhost:8081/deleteUser', {
+    fetch('http://localhost:8080/deleteUser', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
