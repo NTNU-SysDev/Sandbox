@@ -1,15 +1,12 @@
-.App {
-  text-align: center;
-}
-
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
+  height: 180px;
+  margin-bottom: -30px;
 }
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 400px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,4 +26,10 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.modal-header {
+  font-weight: bold;
+  font-size: 30px;
+  margin-left: 12px;
 }
