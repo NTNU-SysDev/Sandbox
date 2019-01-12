@@ -12,7 +12,8 @@ class Table extends React.Component {
     }
 
     componentDidMount() {
-        fetch("http://localhost:8080/users")
+        const api_url = process.env.REACT_APP_BACKEND_URL + "/users";
+        fetch(api_url)
             .then(response => {
                 return response.json();
             }).then(data => {
@@ -25,7 +26,8 @@ class Table extends React.Component {
     }
 
     deleteExistingUser(email) {
-        fetch('http://localhost:8080/deleteUser', {
+        const api_url = process.env.REACT_APP_BACKEND_URL + "/deleteUser";
+        fetch(api_url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

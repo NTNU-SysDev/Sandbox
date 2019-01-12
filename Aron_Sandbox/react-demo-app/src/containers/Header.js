@@ -29,7 +29,8 @@ class Header extends React.Component {
         const phone = document.getElementById('phone_field').value;
         const age = document.getElementById('age_field').value;
 
-        fetch('http://localhost:8080/createUser', {
+        const api_url = process.env.REACT_APP_BACKEND_URL + "/createUser";
+        fetch(api_url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
