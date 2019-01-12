@@ -65,32 +65,18 @@ public class RESTController {
      * Creates a user with the specified information given
      * in the http request and adds him/her to the database.
      *
-     * @param httpEntity the httpEntity received from client
+     * @param user user to create
      * @return a ResponseEntity with http status code 200 if successful
-     *         or 400 if the httpEntity is null or we get an JSONException
+     *         or 400 if not
      */
-    @RequestMapping(value = "/createUser", method = RequestMethod.POST)
-    public ResponseEntity<String> createUser(HttpEntity<String> httpEntity) {
-        String body = httpEntity.getBody();
-        if (null != body) {
-            try {
-                // Create a user object from the parameters in the HTTP POST body, and send it to the UserService,
-                // which will in turn add it to the database
-                JSONObject jsonObject = new JSONObject(body);
-                User u = new User(jsonObject.getString("name"), jsonObject.getString("email"),
-                        jsonObject.getString("phone"), jsonObject.getInt("age"));
-                if (userService.createUser(u)) {
-                    return new ResponseEntity<>("OK", HttpStatus.OK);
-                } else {
-                    return new ResponseEntity<>("Could not create user", HttpStatus.BAD_REQUEST);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-            }
+    @RequestMapping(value = "/createUser", method = RequestMethod.POST, consumes = "application/json")
+    public ResponseEntity<String> createUser(@RequestBody User user) {
+        if (userService.createUser(user)) {
+            return new ResponseEntity<>("User created", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Could not create user", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("JSON body can't be null", HttpStatus.BAD_REQUEST);
-    }
+     }
 
     /**
      * Deletes a user from the database specified by his/her
