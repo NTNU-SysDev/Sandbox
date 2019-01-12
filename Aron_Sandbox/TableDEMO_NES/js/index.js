@@ -22,7 +22,6 @@ function getAllUsers() {
 function createUser() {
     var name = document.getElementById('name_field').value;
     var email = document.getElementById('email_field').value;
-    var password = document.getElementById('password_field').value;
     var phone = document.getElementById('phone_field').value;
     var age = document.getElementById('age_field').value;
 
@@ -34,7 +33,6 @@ function createUser() {
         body: JSON.stringify({
             "name": name,
             "email": email,
-            "password": password,
             "phone": phone,
             "age": age
         })
