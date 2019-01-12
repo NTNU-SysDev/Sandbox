@@ -21,7 +21,7 @@ import java.util.List;
  * CrossOrigin.
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class RESTController {
 
     private final UserService userService;
