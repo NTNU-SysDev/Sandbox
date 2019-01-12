@@ -3,8 +3,6 @@ package no.ntnu.sysdev.SpringBoot_Demo.service;
 import no.ntnu.sysdev.SpringBoot_Demo.entity.User;
 import no.ntnu.sysdev.SpringBoot_Demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,15 +33,15 @@ public class UserService {
      * and returns http status OK, if not it returns http status BAD_REQUEST
      *
      * @param user user to add to the repository
-     * @return a ResponseEntity depending on success or not
+     * @return true on success, false otherwise
      */
-    public ResponseEntity<String> createUser(User user) {
+    public boolean  createUser(User user) {
         User foundUser = userRepository.findByEmail(user.getEmail());
         if (null == foundUser) {
             userRepository.save(user);
-            return new ResponseEntity<>("User created", HttpStatus.OK);
+            return true;
         } else {
-            return new ResponseEntity<>("User already exists", HttpStatus.BAD_REQUEST);
+            return false;
         }
     }
 
@@ -56,15 +54,15 @@ public class UserService {
      * with status code BAD_REQUEST
      *
      * @param email email for the user to delete
-     * @return http status OK if successfully deleted and BAD_REQUEST if not
+     * @return true  if successfully deleted, false otherwise
      */
-    public ResponseEntity<String> deleteUser(String email) {
+    public boolean deleteUser(String email) {
         User userToDelete = userRepository.findByEmail(email);
         if (null != userToDelete) {
             userRepository.delete(userToDelete);
-            return new ResponseEntity<>("User deleted", HttpStatus.OK);
+            return true;
         } else {
-            return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
+            return false;
         }
     }
 

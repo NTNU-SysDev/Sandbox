@@ -27,3 +27,4 @@
 ### Other ###
 node_modules/*
 .directory
+Aron_Sandbox/react-demo-app/.env.development

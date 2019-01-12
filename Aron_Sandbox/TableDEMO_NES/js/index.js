@@ -1,3 +1,6 @@
+var port = 8080;
+var url = "http://localhost:" + port + "/";
+
 getAllUsers();
 
 /**
@@ -5,7 +8,7 @@ getAllUsers();
  * processes the response
  */
 function getAllUsers() {
-    fetch("http://localhost:8080/users").then(function (response) {
+    fetch(url + "users").then(function (response) {
         return response.json();
     }).then(function (json) {
         showUsers(json);
@@ -22,7 +25,7 @@ function createUser() {
     var phone = document.getElementById('phone_field').value;
     var age = document.getElementById('age_field').value;
 
-    fetch('http://localhost:8080/createUser', {
+    fetch(url + "createUser", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -50,15 +53,8 @@ function createUser() {
  * @param email email of the user to delete
  */
 function deleteUser(email) {
-    console.log("Email: " + email);
-    fetch('http://localhost:8080/deleteUser', {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            "email": email
-        })
+    fetch(url + "deleteUser?email=" + email, {
+        method: "DELETE"
     }).then(function (response) {
         if (response.ok) {
             getAllUsers();

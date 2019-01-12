@@ -21,7 +21,7 @@ import java.util.List;
  * CrossOrigin.
  */
 @RestController
-@CrossOrigin(origins = "http://localhost")
+@CrossOrigin
 public class RESTController {
 
     private final UserService userService;
@@ -65,53 +65,34 @@ public class RESTController {
      * Creates a user with the specified information given
      * in the http request and adds him/her to the database.
      *
-     * @param httpEntity the httpEntity received from client
+     * @param user user to create
      * @return a ResponseEntity with http status code 200 if successful
-     *         or 400 if the httpEntity is null or we get an JSONException
+     *         or 400 if not
      */
-    @RequestMapping(value = "/createUser", method = RequestMethod.POST)
-    public ResponseEntity<String> createUser(HttpEntity<String> httpEntity) {
-        String body = httpEntity.getBody();
-        if (null != body) {
-            try {
-                JSONObject jsonObject = new JSONObject(body);
-                return userService.createUser(new User(
-                        jsonObject.getString("name"),
-                        jsonObject.getString("email"),
-                        jsonObject.getString("phone"),
-                        jsonObject.getInt("age")
-                ));
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-            }
+    @RequestMapping(value = "/createUser", method = RequestMethod.POST, consumes = "application/json")
+    public ResponseEntity<String> createUser(@RequestBody User user) {
+        if (userService.createUser(user)) {
+            return new ResponseEntity<>("User created", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Could not create user", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("JSON body can't be null", HttpStatus.BAD_REQUEST);
-    }
+     }
 
     /**
      * Deletes a user from the database specified by his/her
      * email address given in the http request
      *
-     * @param httpEntity the httpEntity received from client
+     * @param email Email address of the user to delete
      * @return httpStatus 200 OK if user was successfully deleted
-     *         or 400 Bad Request if not
+     * or 400 Bad Request if not
      */
-    @RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
-    public ResponseEntity<String> deleteUser(HttpEntity<String> httpEntity) {
-        String body = httpEntity.getBody();
-        if (null != body) {
-            try {
-                JSONObject jsonObject = new JSONObject(body);
-                String email = jsonObject.getString("email");
-                userService.deleteUser(email);
-                return new ResponseEntity<>("User deleted", HttpStatus.OK);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-            }
+    @RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteUser(@RequestParam(value = "email") String email) {
+        if (userService.deleteUser(email)) {
+            return new ResponseEntity<>("User deleted", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("JSON body can't be null", HttpStatus.BAD_REQUEST);
     }
 
 }
