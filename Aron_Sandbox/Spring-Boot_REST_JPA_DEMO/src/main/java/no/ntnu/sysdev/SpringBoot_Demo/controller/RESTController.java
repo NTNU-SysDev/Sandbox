@@ -74,13 +74,16 @@ public class RESTController {
         String body = httpEntity.getBody();
         if (null != body) {
             try {
+                // Create a user object from the parameters in the HTTP POST body, and send it to the UserService,
+                // which will in turn add it to the database
                 JSONObject jsonObject = new JSONObject(body);
-                return userService.createUser(new User(
-                        jsonObject.getString("name"),
-                        jsonObject.getString("email"),
-                        jsonObject.getString("phone"),
-                        jsonObject.getInt("age")
-                ));
+                User u = new User(jsonObject.getString("name"), jsonObject.getString("email"),
+                        jsonObject.getString("phone"), jsonObject.getInt("age"));
+                if (userService.createUser(u)) {
+                    return new ResponseEntity<>("OK", HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("Could not create user", HttpStatus.BAD_REQUEST);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -93,25 +96,17 @@ public class RESTController {
      * Deletes a user from the database specified by his/her
      * email address given in the http request
      *
-     * @param httpEntity the httpEntity received from client
+     * @param email Email address of the user to delete
      * @return httpStatus 200 OK if user was successfully deleted
-     *         or 400 Bad Request if not
+     * or 400 Bad Request if not
      */
-    @RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
-    public ResponseEntity<String> deleteUser(HttpEntity<String> httpEntity) {
-        String body = httpEntity.getBody();
-        if (null != body) {
-            try {
-                JSONObject jsonObject = new JSONObject(body);
-                String email = jsonObject.getString("email");
-                userService.deleteUser(email);
-                return new ResponseEntity<>("User deleted", HttpStatus.OK);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-            }
+    @RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteUser(@RequestParam(value = "email") String email) {
+        if (userService.deleteUser(email)) {
+            return new ResponseEntity<>("User deleted", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("JSON body can't be null", HttpStatus.BAD_REQUEST);
     }
 
 }
