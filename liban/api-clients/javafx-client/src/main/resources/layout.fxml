@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="no.ntnu.sysdev.javafx_client.GUIController">
+   <children>
+      <TabPane fx:id="tabPane" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab fx:id="tabAddUser" text="Add User">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label contentDisplay="RIGHT" layoutX="434.0" layoutY="160.0" prefHeight="32.0" text="Age: ">
+                           <graphic>
+                              <TextField fx:id="txtAge" prefHeight="32.0" prefWidth="87.0" />
+                           </graphic></Label>
+                        <Label contentDisplay="RIGHT" layoutX="235.0" layoutY="80.0" prefHeight="32.0" text="Name:  ">
+                           <graphic>
+                              <TextField fx:id="txtName" prefHeight="32.0" prefWidth="271.0" />
+                           </graphic></Label>
+                        <Label contentDisplay="RIGHT" layoutX="235.0" layoutY="120.0" prefHeight="32.0" text="E-mail: ">
+                           <graphic>
+                              <TextField fx:id="txtEmail" prefHeight="32.0" prefWidth="273.0" />
+                           </graphic></Label>
+                        <Label contentDisplay="RIGHT" layoutX="235.0" layoutY="160.0" prefHeight="32.0" text="Phone: ">
+                           <graphic>
+                              <TextField fx:id="txtPhone" prefHeight="32.0" prefWidth="143.0" />
+                           </graphic></Label>
+                        <Button fx:id="btnCreateUser" layoutX="277.0" layoutY="199.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="275.0" text="Create user" />
+                        <ImageView fitHeight="212.0" fitWidth="217.0" layoutX="14.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/adduser.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="tabManageUser" text="Manage Users">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <SplitPane dividerPositions="0.16216216216216217" orientation="VERTICAL" prefHeight="372.0" prefWidth="600.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="12.0" prefWidth="598.0">
+                                 <children>
+                                    <Button fx:id="btnRefresh" layoutX="511.0" layoutY="16.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" />
+                                    <Button fx:id="btnDelete" layoutX="552.0" layoutY="16.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" />
+                                    <Label contentDisplay="RIGHT" layoutX="14.0" layoutY="16.0" text="Server:">
+                                       <graphic>
+                                          <TextField fx:id="txtHost" prefHeight="32.0" prefWidth="180.0" promptText="api.example.com" />
+                                       </graphic>
+                                    </Label>
+                                    <Label contentDisplay="RIGHT" layoutX="241.0" layoutY="16.0" text=":">
+                                       <graphic>
+                                          <TextField fx:id="txtPort" alignment="CENTER" prefHeight="32.0" prefWidth="62.0" promptText="Port" />
+                                       </graphic>
+                                    </Label>
+                                    <Button disable="true" layoutX="469.0" layoutY="16.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" />
+                                    <Button fx:id="btnConnect" layoutX="316.0" layoutY="16.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="92.0" text="Connect" />
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                 <children>
+                                    <TableView fx:id="tblUserList" editable="true" prefHeight="307.0" prefWidth="600.0">
+                                      <columns>
+                                        <TableColumn fx:id="colName" prefWidth="164.0" text="name" />
+                                        <TableColumn fx:id="colEmail" prefWidth="233.0" text="email" />
+                                          <TableColumn fx:id="colPhone" minWidth="8.0" prefWidth="113.0" text="phone" />
+                                          <TableColumn fx:id="colAge" minWidth="3.0" prefWidth="89.0" text="age" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                        </SplitPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>
