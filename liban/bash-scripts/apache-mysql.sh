@@ -8,9 +8,9 @@ else
 fi
 
 read -s -p "Enter a new password for MySQL: " pass
-echo "\n"
+echo
 read -s -p "Re-enter the password: " conPass
-echo "\n"
+echo
 
 if [ $pass != $conPass ]; then
         echo "Passwords are not equal."
@@ -21,16 +21,15 @@ fi
 apt-get update -y
 apt-get upgrade -y
 
-# Install expect, Apache & MySQL server
-apt-get install expect -y
+# Install Apache
 apt-get install apache2 -y
 
-# Setup auto response during installation
+# Installs and configures MySQL
 debconf-set-selections <<< "mysql-server mysql-server/root_password password $pass"
 debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $pass"
+apt-get install expect -y
 apt-get install mysql-server -y
 
-# Configures MySQL
 expect -f - <<-CONF
         set timeout 1
         spawn mysql_secure_installation
@@ -60,14 +59,15 @@ expect -f - <<-CONF
 CONF
 
 
-# Creates user table
+# Creates user table for the api
 mysql -uroot -p"$pass" <<-QUERY
-        DROP DATABASE IF EXISTS project;
-        CREATE DATABASE project;
-        USE project;
+        DROP DATABASE IF EXISTS api;
+        CREATE DATABASE api;
+        USE api;
         CREATE TABLE user (
                 name VARCHAR(255) NOT NULL,
                 email VARCHAR(255) PRIMARY KEY,
-                age INT(3) NOT NULL,
-                password VARCHAR(64) NOT NULL);
+                phone VARCHAR(8) UNIQUE NOT NULL,
+                age INT(3) NOT NULL
+        );
 QUERY
