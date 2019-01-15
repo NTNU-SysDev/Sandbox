@@ -3,13 +3,11 @@ package no.ntnu.sysdev.javafx_client;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-@SuppressWarnings("unchecked")
 public class GUIController {
 
     // Client
@@ -56,9 +54,7 @@ public class GUIController {
         colPhone.setCellValueFactory(new PropertyValueFactory<User, Integer>("phone"));
         colAge.setCellValueFactory(new PropertyValueFactory<User, Integer>("age"));
 
-        tblUserList.setEditable(true);
         tblUserList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        colName.setCellFactory(TextFieldTableCell.forTableColumn());
 
         tabPane.getSelectionModel().select(tabManageUser);
     }
@@ -99,9 +95,9 @@ public class GUIController {
 
         txtPort.textProperty().addListener((obs, oldText, newText) -> {
             if (newText.matches("(\\d)*")) {
-                txtAge.setText(newText);
+                txtPort.setText(newText);
             } else {
-                txtAge.setText(oldText);
+                txtPort.setText(oldText);
             }
         });
 
@@ -113,7 +109,7 @@ public class GUIController {
         try {
             client.createUser(new User(name, email, phone, age));
         } catch (IOException e) {
-            System.out.println("Couldn't create user. (" + client.getHttpCode() + ")");
+            System.out.println("Couldn't create user. (" + client.getHttpResponse() + ")");
         }
     }
 
@@ -121,7 +117,7 @@ public class GUIController {
         try {
             tblUserList.setItems(client.getUsers());
         } catch (Exception e) {
-            System.out.println("Couldn't refresh user list (" + client.getHttpCode() + ")");
+            System.out.println("Couldn't refresh user list (" + client.getHttpResponse() + ")");
             disconnect();
         }
     }
@@ -130,7 +126,7 @@ public class GUIController {
         try {
             client.deleteUser(user.getEmail());
         } catch (IOException e) {
-            System.out.println("Couldn't delete user (" + client.getHttpCode() + ")");
+            System.out.println("Couldn't delete user (" + client.getHttpResponse() + ")");
         }
     }
 
@@ -164,10 +160,5 @@ public class GUIController {
     private void disconnect() {
         client = null;
         disableButtons(true);
-    }
-
-    //TODO: Implement editUser method
-    private void editUser(User user) {
-
     }
 }

@@ -6,31 +6,21 @@ import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
 
 public class RESTClient {
 
     private String host;
     private int port;
-    private String httpCode;
+    private String httpResponse;
 
     public RESTClient(String host, int port) throws IOException {
         this.host = host;
         this.port = port;
-        validateConnection();
     }
 
-    public String getHttpCode() {
-        return "HTTP/1.1 " + httpCode;
-    }
-
-    private void validateConnection() throws IOException {
-        URL url = new URL("http", host, port, "/");
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setConnectTimeout(2000);
-        con.connect();
+    public String getHttpResponse() {
+        return "HTTP/1.1 " + httpResponse;
     }
 
     private String request(String method, String file, String contentType, String payload) throws IOException {
@@ -52,7 +42,7 @@ public class RESTClient {
         }
 
         con.connect();
-        httpCode = con.getResponseCode() + " " + con.getResponseMessage();
+        httpResponse = con.getResponseCode() + " " + con.getResponseMessage();
 
         StringBuilder resp = new StringBuilder();
         BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
