@@ -1,5 +1,7 @@
 import React from "react";
 import Row from '../components/Row';
+import {reduxStore, reloadUsers} from '../redux-storage'
+import {restGetUsers} from '../rest-api'
 
 class Table extends React.Component {
 
@@ -8,43 +10,34 @@ class Table extends React.Component {
         this.state = {
             users: [],
         };
-        this.deleteExistingUser = this.deleteExistingUser.bind(this);
+        // Need to manually bind component methods so that we can access 'this' within them
+        this.onUserListUpdated = this.onUserListUpdated.bind(this);
     }
 
     componentDidMount() {
-        const api_url = process.env.REACT_APP_BACKEND_URL + "/users";
-        fetch(api_url)
-            .then(response => {
-                return response.json();
-            }).then(data => {
-            let users = data.map((row) => {
-                return <Row key={row.email} name={row.name} email={row.email}
-                        phone={row.phone} age={row.age}/>
-            });
-            this.setState({users: users});
+        // Send REST request to get users, notify Redux store when response arrives
+        restGetUsers(function(json_response) {
+            reduxStore.dispatch(reloadUsers(json_response));
         });
+
+        // Subscribe to notification whenever Redux store is updated
+        reduxStore.subscribe(this.onUserListUpdated);
     }
 
-    deleteExistingUser(email) {
-        const api_url = process.env.REACT_APP_BACKEND_URL + "/deleteUser";
-        fetch(api_url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "email": email
-            })
-        }).then(function (response) {
-            if (response.ok) {
-                window.location.reload();
-            } else {
-                alert("User could not be found");
-            }
-        });
+    onUserListUpdated() {
+        // This method is called whenever Redux store state is updated
+        // Update our internal state accordingly
+        var reduxState = reduxStore.getState();
+        this.setState({users: reduxState});
     }
 
     render() {
+        // Generate a Row component from each user object in the current state
+        let users = this.state.users.map((row) => {
+            return <Row key={row.email} name={row.name} email={row.email}
+                        phone={row.phone} age={row.age}/>
+        });
+
         return (
             <table className="highlight centered">
                 <thead>
@@ -57,7 +50,7 @@ class Table extends React.Component {
                 </tr>
                 </thead>
                 <tbody>
-                {this.state.users}
+                {users}
                 </tbody>
             </table>
         );
