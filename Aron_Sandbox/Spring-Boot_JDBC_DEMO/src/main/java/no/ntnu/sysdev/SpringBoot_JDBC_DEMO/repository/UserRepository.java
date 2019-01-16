@@ -14,6 +14,7 @@ import java.util.List;
 public class UserRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private RowMapper<User> rowMapper = new UserRowMapper();
 
     @Autowired
     public UserRepository(JdbcTemplate jdbcTemplate) {
@@ -22,17 +23,14 @@ public class UserRepository {
 
     public List<User> getAllUsers() {
         String sql = "SELECT * FROM user";
-        RowMapper<User> rowMapper = new UserRowMapper();
-        return this.jdbcTemplate.query(sql, rowMapper);
+        return this.jdbcTemplate.query(sql, this.rowMapper);
     }
 
-    // TODO Change this so it can return null
     public User getUserByEmail(String email) {
         String sql = "SELECT * FROM user WHERE email = ?";
-        RowMapper<User> rowMapper = new UserRowMapper();
         User user = null;
         try {
-            user = this.jdbcTemplate.queryForObject(sql, rowMapper, email);
+            user = this.jdbcTemplate.queryForObject(sql, this.rowMapper, email);
         } catch (EmptyResultDataAccessException e) {
             e.getStackTrace();
         }
