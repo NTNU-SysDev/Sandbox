@@ -3,8 +3,13 @@ package no.ntnu.sysdev.javafx_client;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -19,18 +24,23 @@ public class RESTClient {
     private String httpResponse;
 
     /**
-     * Stores host and port of the API server.
+     * Empty constructor.
+     */
+    public RESTClient() {}
+
+    /**
+     * Stores host and port of the API server for the current request.
      *
-     * @param host          host name, excluding the protocol type at the beginning of the url
+     * @param host          host name, excluding the protocol at the beginning of the url
      * @param port          port number
      */
-    public RESTClient(String host, int port) {
+    public void setServer(String host, int port) {
         this.host = host;
         this.port = port;
     }
 
     /**
-     * Returns the last server-generated HTTP response from the last request done.
+     * Returns the last server-generated HTTP response from the last request preformed.
      *
      * @return  previous HTTP code and message
      */
@@ -39,7 +49,7 @@ public class RESTClient {
     }
 
     /**
-     * Main method that handles communication.
+     * Main method that handles communication with the API.
      *
      * @param method        HTTP method (GET, POST, DELETE, etc...)
      * @param file          document file (that comes after the domain name)
@@ -68,17 +78,25 @@ public class RESTClient {
             outputStream.write(payload.getBytes());
             outputStream.close();
         }
-        con.connect();
+
+        // Tries to connect to the server. If it fails, it will throw a ConnectionException instead of IOException
+        try {
+            con.connect();
+        } catch (IOException ioe) {
+            throw new ConnectException(ioe.getMessage());
+        }
+
         
-        // Stores the HTTP response of the current connection
+        // Stores the HTTP status
         httpResponse = con.getResponseCode() + " " + con.getResponseMessage();
 
         // Stores request body in a buffer
         BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
         StringBuilder response = new StringBuilder();
+
         String out;
 
-        // Creates a string of the server response body
+        // Concatenates the input stream to a single string
         while ((out = reader.readLine()) != null) {
             response.append(out);
         }
@@ -91,15 +109,21 @@ public class RESTClient {
     /**
      * Requests to receive all users.
      *
-     * @return              a list that can be used for the table in GUI
-     * @throws Exception    when users cannot be created from the JSON string or if request to server fails
+     * @return                  a list that can be used for the table in GUI
+     * @throws ParseException   when users cannot be created from the JSON string
+     * @throws IOException      if request to server fails
      *
      * @see #request(String, String, String, String)
      * @see User#createUsers(String)
      */
-    public ObservableList<User> getUsers() throws Exception {
-        // Gets JSON containing all users
-        String jsonString = jsonString = request("GET", "/users", "application-x-www-form-urlencoded", null);
+    public ObservableList<User> getUsers() throws IOException, ParseException {
+        // Gets JSON containing all users after sending a request
+        String jsonString = request("GET", "/users", "application/x-www-form-urlencoded", null);
+
+        // Assign the variable to an empty JSON if request fails
+        if (jsonString.equals("")) {
+            jsonString = "[]";
+        }
 
         // Convert JSON using the method inside User class and creates a list for GUI table
         return FXCollections.observableArrayList(User.createUsers(jsonString));
@@ -137,7 +161,7 @@ public class RESTClient {
      */
     public void deleteUser(String email) throws IOException {
         String response = request("DELETE", "/deleteUser", null, "email=" + email);
-        System.out.println(response);
+        System.out.println(response + " (" + email + ")");
     }
 
 }

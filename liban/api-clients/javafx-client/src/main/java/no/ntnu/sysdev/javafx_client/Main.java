@@ -20,6 +20,11 @@ public class Main extends Application {
 
         stage.setTitle("JavaFX REST Client");
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/img/logo.png")));
+
+        stage.setMaxWidth(605);
+        stage.setMaxHeight(455);
+        stage.setResizable(false);
+
         stage.setScene(scene);
         stage.show();
     }
