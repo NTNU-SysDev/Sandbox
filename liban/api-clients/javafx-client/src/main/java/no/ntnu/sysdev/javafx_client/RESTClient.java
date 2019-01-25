@@ -14,8 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Responsible of communicating with the API and provide
- * information to classes when needed.
+ * Establishes communication with the API and interacts with it.
  */
 public class RESTClient {
 
@@ -24,7 +23,7 @@ public class RESTClient {
     private String httpResponse;
 
     /**
-     * Empty constructor.
+     * Creates an empty client.
      */
     public RESTClient() {}
 
@@ -40,7 +39,7 @@ public class RESTClient {
     }
 
     /**
-     * Returns the last server-generated HTTP response from the last request preformed.
+     * Returns the last server-generated HTTP response from the latest request.
      *
      * @return  previous HTTP code and message
      */
@@ -86,7 +85,6 @@ public class RESTClient {
             throw new ConnectException(ioe.getMessage());
         }
 
-        
         // Stores the HTTP status
         httpResponse = con.getResponseCode() + " " + con.getResponseMessage();
 
@@ -140,13 +138,13 @@ public class RESTClient {
     public void createUser(User user) throws IOException {
         JSONObject json = new JSONObject();
 
-        // Extracts data from User object and creates a JSON object
+        // Extracts user data and put it in the JSON
         json.put("name", user.getName());
         json.put("email", user.getEmail());
         json.put("phone", user.getPhone());
         json.put("age", user.getAge());
 
-        // Sends a "create user"-request to the server with JSON in string format
+        // Sends a creation request to the server with JSON in string format
         String response = request("POST", "/createUser", "application/json", json.toJSONString());
         System.out.println(response);
     }

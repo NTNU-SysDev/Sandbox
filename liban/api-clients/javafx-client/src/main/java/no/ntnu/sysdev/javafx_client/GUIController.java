@@ -6,6 +6,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -87,7 +88,7 @@ public class GUIController {
         btnCreateUser.setOnMouseClicked(evt -> {
             String name = txtName.getText();
             String email = txtEmail.getText();
-            String phone = txtPhone.getText();
+            String phone = txtPhone.getText().replace(" ", ""); // Removes whitespaces
             int age = Integer.parseInt(txtAge.getText());
 
             createUser(name, email, phone, age);
@@ -95,6 +96,15 @@ public class GUIController {
 
         btnDelete.setOnMouseClicked(evt -> deleteUser());
         btnRefresh.setOnMouseClicked(evt -> refreshUsers());
+
+        // Restricts to numeric values and spaces
+        txtPhone.textProperty().addListener((obs, oldText, newText) -> {
+            if (newText.matches("(\\d|\\s)*")) {
+                txtPhone.setText(newText);
+            } else {
+                txtPhone.setText(oldText);
+            }
+        });
 
         // Restricts to numeric values
         txtAge.textProperty().addListener((obs, oldText, newText) -> {
@@ -152,7 +162,7 @@ public class GUIController {
             setStatus(client.getHttpResponse());
             refreshUsers();
 
-            // Resets the text fields after successfully adding a user
+            // Resets the text fields
             txtName.setText("");
             txtEmail.setText("");
             txtPhone.setText("");
@@ -216,10 +226,10 @@ public class GUIController {
     private void setStatus(String statusResponse) {
         String img;
 
-        if (Pattern.compile("HTTP/1.1 [1-3]\\d\\d(.*)").matcher(statusResponse).matches()) {
+        if (Pattern.compile("HTTP/1.1 [1-3]\\d{2}(.*)").matcher(statusResponse).matches()) {
             // Checks if string contains status code from 100 to 300
             img = "/img/green.png";
-        } else if (Pattern.compile("HTTP/1.1 [45]\\d\\d(.*)").matcher(statusResponse).matches()) {
+        } else if (Pattern.compile("HTTP/1.1 [45]\\d{2}(.*)").matcher(statusResponse).matches()) {
             // Checks if string contains status code from 400 to 500
             img = "/img/red.png";
         } else {
