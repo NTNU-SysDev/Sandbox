@@ -9,6 +9,9 @@ import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 
+/**
+ * Contains user data. Also able to create a list of users.
+ */
 public class User {
     private final SimpleStringProperty name;
     private final SimpleStringProperty email;
@@ -39,7 +42,7 @@ public class User {
     }
 
     /**
-     * Creates users from JSON string
+     * Creates users from JSON string.
      *
      * @param jsonString        JSON string to parse
      * @return                  a list of created user
